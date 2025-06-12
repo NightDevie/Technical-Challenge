@@ -1,3 +1,4 @@
+using Npgsql;
 
 namespace LetShareAuthChallenge
 {
@@ -15,6 +16,24 @@ namespace LetShareAuthChallenge
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            // Grab connection string from appsettings.json
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            // Add a minimal endpoint to test DB connection
+            app.MapGet("/test-db", () =>
+            {
+                try
+                {
+                    using var conn = new Npgsql.NpgsqlConnection(connectionString);
+                    conn.Open();
+                    return Results.Ok("PostgreSQL connection is successful!");
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem($"Failed to connect to PostgreSQL: {ex.Message}");
+                }
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
