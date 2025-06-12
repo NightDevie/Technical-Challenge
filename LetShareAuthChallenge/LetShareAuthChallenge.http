@@ -1,0 +1,6 @@
+@LetShareAuthChallenge_HostAddress = http://localhost:5155
+
+GET {{LetShareAuthChallenge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
