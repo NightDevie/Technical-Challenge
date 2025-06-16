@@ -2,7 +2,6 @@
 using LetShareAuthChallenge.Services;
 using Microsoft.AspNetCore.Mvc;
 
-
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
@@ -17,6 +16,16 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto request)
     {
+        if (request.GrantType != "password")
+        {
+            return BadRequest(new { error = "Unsupported grant_type" });
+        }
+
+        if (request.ClientId != "web" || request.ClientSecret != "webpass1")
+        {
+            return Unauthorized(new { error = "Invalid client credentials" });
+        }
+
         try
         {
             var (access, refresh) = await _authService.AuthenticateAsync(

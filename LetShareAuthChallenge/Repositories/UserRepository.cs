@@ -1,5 +1,6 @@
-﻿using Npgsql;
-using LetShareAuthChallenge.Models;
+﻿using LetShareAuthChallenge.Models;
+using Npgsql;
+using System.Data;
 
 namespace LetShareAuthChallenge.Repositories
 {
@@ -16,27 +17,28 @@ namespace LetShareAuthChallenge.Repositories
         {
             User? user = null;
 
-            using (var conn = new NpgsqlConnection(_connectionString))
+            await using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
-                using (var cmd = new NpgsqlCommand("SELECT userid, username, password_hash, role, tenantid, languageid, name FROM tbl_user WHERE username = @username LIMIT 1", conn))
+                await using (var cmd = new NpgsqlCommand("SELECT id, username, password, role, tenant_id, language_id, first_name, last_name FROM tbl_user WHERE username = @username LIMIT 1", conn))
                 {
                     cmd.Parameters.AddWithValue("username", username);
 
-                    using (var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
                     {
                         if (await reader.ReadAsync())
                         {
                             user = new User
                             {
-                                UserId = reader.GetInt32(0),
+                                UserId = reader.GetString(0),
                                 Username = reader.GetString(1),
                                 PasswordHash = reader.GetString(2),
                                 Role = !reader.IsDBNull(3) ? reader.GetString(3) : null,
-                                TenantId = !reader.IsDBNull(4) ? reader.GetInt32(4) : (int?)null,
-                                LanguageId = !reader.IsDBNull(5) ? reader.GetInt32(5) : (int?)null,
-                                Name = !reader.IsDBNull(6) ? reader.GetString(6) : null,
+                                TenantId = !reader.IsDBNull(4) ? reader.GetString(4) : null,
+                                LanguageId = !reader.IsDBNull(5) ? reader.GetString(5) : null,
+                                FirstName = !reader.IsDBNull(6) ? reader.GetString(6) : null,
+                                LastName = !reader.IsDBNull(7) ? reader.GetString(7) : null,
                             };
                         }
                     }

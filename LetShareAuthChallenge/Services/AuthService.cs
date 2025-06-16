@@ -48,13 +48,15 @@ namespace LetShareAuthChallenge.Services
 
             var claims = new[]
             {
-            new Claim("userId", user.UserId.ToString()),
-            new Claim("username", user.Username),
-            new Claim("tenantId", user.TenantId?.ToString() ?? ""),
-            new Claim("role", user.Role ?? ""),
-            new Claim("languageId", user.LanguageId?.ToString() ?? ""),
-            new Claim("name", user.Name ?? "")
-        };
+                new Claim("userId", user.UserId),
+                new Claim("username", user.Username),
+                new Claim("role", user.Role ?? ""),
+                new Claim("tenantId", user.TenantId ?? ""),
+                new Claim("languageId", user.LanguageId ?? ""),
+                new Claim("firstName", user.FirstName ?? ""),
+                new Claim("lastName", user.LastName ?? "")
+            };
+            
 
             var expiration = isAccess
                 ? int.Parse(_configuration["JwtSettings:AccessTokenExpirationMinutes"]!)
