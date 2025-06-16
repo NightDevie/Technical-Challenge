@@ -1,4 +1,8 @@
 using Npgsql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using LetShareAuthChallenge.Repositories; // <- ADD THIS
 
 namespace LetShareAuthChallenge
 {
@@ -9,11 +13,33 @@ namespace LetShareAuthChallenge
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Authentication with JWT
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!);
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+
+            // Register UserRepository with DI
+            builder.Services.AddScoped<IUserRepository>(provider =>
+                new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
             var app = builder.Build();
 
@@ -27,11 +53,12 @@ namespace LetShareAuthChallenge
                 {
                     using var conn = new Npgsql.NpgsqlConnection(connectionString);
                     conn.Open();
-                    return Results.Ok("PostgreSQL connection is successful!");
+                    return Results.Ok("Postgres connection is successful!");
                 }
                 catch (Exception ex)
                 {
-                    return Results.Problem($"Failed to connect to PostgreSQL: {ex.Message}");
+                    return Results.Problem($"Failed to connect to Postgres: {ex.Message}");
+
                 }
             });
 
@@ -44,8 +71,8 @@ namespace LetShareAuthChallenge
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
