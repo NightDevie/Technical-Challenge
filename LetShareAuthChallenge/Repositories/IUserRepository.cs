@@ -1,5 +1,4 @@
 ﻿using LetShareAuthChallenge.Models;
-using System.Threading.Tasks;
 
 namespace LetShareAuthChallenge.Repositories
 {

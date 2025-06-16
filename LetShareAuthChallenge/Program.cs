@@ -1,8 +1,9 @@
-using Npgsql;
+using LetShareAuthChallenge.Repositories; // <- ADD THIS
+using LetShareAuthChallenge.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using System.Text;
-using LetShareAuthChallenge.Repositories; // <- ADD THIS
 
 namespace LetShareAuthChallenge
 {
@@ -13,8 +14,8 @@ namespace LetShareAuthChallenge
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddControllers();
-
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
