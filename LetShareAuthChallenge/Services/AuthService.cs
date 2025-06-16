@@ -3,7 +3,6 @@ using LetShareAuthChallenge.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace LetShareAuthChallenge.Services
 {
@@ -42,7 +41,9 @@ namespace LetShareAuthChallenge.Services
         private string GenerateJwt(User user, bool isAccess)
         {
             var secretKey = _configuration["JwtSettings:SecretKey"]!;
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            //var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var keyBytes = Convert.FromBase64String(secretKey);
+            var key = new SymmetricSecurityKey(keyBytes);
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
