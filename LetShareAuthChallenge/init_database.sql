@@ -68,7 +68,7 @@ ALTER TABLE public.tbl_user OWNER TO postgres;
 -- Data for Name: tbl_user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.tbl_user (id, email, enabled, first_name, job_title, last_name, middle_name, password, telephone, username, profile_image_id, language_id, tenant_id, legacy_id, role, first_access, calendar_view) VALUES ('3c3f438e-ec3a-4c17-a23d-580975de8ee6', 'assessment@letshare-test.com', true, 'Esther', 'Head of Customer Service', 'de Jong', NULL, '$2a$13$LCVcpVzUSYu76WFy3L0AB.FqJ9DYJXDksFAsKa5asaTgNex4NCKvi', NULL, NULL, 'e3d7bb5b-4377-4ac5-9ce4-33cba7f16459', '5f9341e4-f59f-41e6-bb67-0ff989f4a6da', '7d2aa378-9a1b-4a2f-80f3-9d9be6234a3f', NULL, 'ADM', false, 'MONTH');
+INSERT INTO public.tbl_user (id, email, enabled, first_name, job_title, last_name, middle_name, password, telephone, username, profile_image_id, language_id, tenant_id, legacy_id, role, first_access, calendar_view) VALUES ('3c3f438e-ec3a-4c17-a23d-580975de8ee6', 'assessment@letshare-test.com', true, 'Esther', 'Head of Customer Service', 'de Jong', NULL, '$2a$13$LCVcpVzUSYu76WFy3L0AB.FqJ9DYJXDksFAsKa5asaTgNex4NCKvi', NULL, 'assessment@letshare-test.com', 'e3d7bb5b-4377-4ac5-9ce4-33cba7f16459', '5f9341e4-f59f-41e6-bb67-0ff989f4a6da', '7d2aa378-9a1b-4a2f-80f3-9d9be6234a3f', NULL, 'ADM', false, 'MONTH');
 
 
 --
